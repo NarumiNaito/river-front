@@ -9,32 +9,57 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts'
-import { WaterChartData } from '@/types'
+import { Box } from '@mui/material'
 
-export default function Chart({ data }: { data: WaterChartData[] }) {
+interface ChartLineProps<T> {
+  data: T[]
+  dataKey: keyof T
+  label?: string
+  xKey?: keyof T
+  unit?: string
+  color?: string
+  title?: string
+}
+
+export default function Chart<T extends Record<string, unknown>>({
+  data,
+  dataKey,
+  label = '値',
+  xKey = 'formattedDate',
+  unit = '',
+  color = '#8884d8',
+}: ChartLineProps<T>) {
   return (
-    <ResponsiveContainer width='100%' height='100%'>
-      <LineChart data={data} margin={{ top: 10, right: 10, bottom: 40, left: 10 }}>
-        <XAxis
-          dataKey='formattedDate'
-          interval='preserveStartEnd'
-          tick={{ fontSize: 10 }}
-          angle={-45}
-          textAnchor='end'
-        />
-        <YAxis
-          label={{ angle: -90, position: 'insideLeft' }}
-          tickFormatter={(value) => `${value} m`}
-        />
-        <Tooltip
-          formatter={(value: number | string) => {
-            const num = typeof value === 'number' ? value : parseFloat(value)
-            return [isNaN(num) ? '―' : `${num.toFixed(2)} m`, '水位']
-          }}
-        />
-        <CartesianGrid stroke='#ccc' />
-        <Line type='monotone' dataKey='value' stroke='#8884d8' strokeWidth={2} dot={false} />
-      </LineChart>
-    </ResponsiveContainer>
+    <Box sx={{ width: '100%', height: '100%' }}>
+      <ResponsiveContainer width='100%' height={300}>
+        <LineChart data={data} margin={{ top: 10, right: 10, bottom: 40, left: 10 }}>
+          <XAxis
+            dataKey={xKey as string}
+            interval='preserveStartEnd'
+            tick={{ fontSize: 10 }}
+            angle={-45}
+            textAnchor='end'
+          />
+          <YAxis
+            label={{ angle: -90, position: 'insideLeft' }}
+            tickFormatter={(v) => `${v}${unit}`}
+          />
+          <Tooltip
+            formatter={(v: number | string) => {
+              const val = typeof v === 'number' ? v : parseFloat(v)
+              return [isNaN(val) ? '―' : `${val.toFixed(2)}${unit}`, label]
+            }}
+          />
+          <CartesianGrid stroke='#ccc' />
+          <Line
+            type='monotone'
+            dataKey={dataKey as string}
+            stroke={color}
+            strokeWidth={2}
+            dot={false}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </Box>
   )
 }
