@@ -9,12 +9,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts'
-
-export interface WaterChartData {
-  dateTime: Date
-  formattedDate: string
-  value: number
-}
+import { WaterChartData } from '@/types'
 
 export default function Chart({ data }: { data: WaterChartData[] }) {
   return (

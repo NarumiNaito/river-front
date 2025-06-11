@@ -6,7 +6,7 @@ export default function Header() {
     <AppBar position='static' component='div'>
       <Toolbar>
         <Typography variant='h6' component='div'>
-          大河津水位マップ
+          大河津水位モニタリング
         </Typography>
       </Toolbar>
     </AppBar>
