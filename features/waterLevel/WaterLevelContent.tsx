@@ -81,14 +81,6 @@ export default function WaterLevelContent() {
 
   return (
     <div className='p-4 space-y-6'>
-      <ul className='mb-4'>
-        {Object.entries(filteredData.metadata).map(([key, val]) => (
-          <li key={key} className='text-gray-700'>
-            {key}: {val}
-          </li>
-        ))}
-      </ul>
-
       {latestDifference && (
         <Box
           component={Paper}
@@ -134,7 +126,13 @@ export default function WaterLevelContent() {
           </Typography>
         </Box>
       )}
-
+      <ul className='mb-4'>
+        {Object.entries(filteredData.metadata).map(([key, val]) => (
+          <li key={key} className='text-gray-700'>
+            {key}: {val}
+          </li>
+        ))}
+      </ul>
       <Grid container spacing={2} sx={{ p: 2 }}>
         <Grid size={{ xs: 5, sm: 4, md: 3 }}>
           <TextField

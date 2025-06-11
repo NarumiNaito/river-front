@@ -15,4 +15,5 @@ export interface WaterChartData {
   dateTime: Date
   formattedDate: string
   value: number
+  [key: string]: unknown
 }
