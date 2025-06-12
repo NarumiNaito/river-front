@@ -1,5 +1,6 @@
 'use client'
 import { AppBar, Toolbar, Typography } from '@mui/material'
+import Link from 'next/link'
 
 export default function Header() {
   return (
@@ -9,6 +10,7 @@ export default function Header() {
           大河津水位モニタリング
         </Typography>
       </Toolbar>
+      <Link href={'/login'}>ログイン</Link>
     </AppBar>
   )
 }
