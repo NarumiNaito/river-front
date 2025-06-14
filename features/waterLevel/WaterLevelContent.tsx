@@ -27,7 +27,10 @@ function transformData(data: WaterRow[]): WaterChartData[] {
 }
 
 export default function WaterLevelContent() {
-  const { data, error, isLoading } = useSWR<WaterResponse>('/api/water-level', fetcher)
+  const { data, error, isLoading } = useSWR<WaterResponse>('/api/water-level', fetcher, {
+    refreshInterval: 60 * 10 * 1000,
+    revalidateOnFocus: true,
+  })
   const [selectedDate, setSelectedDate] = useState('')
 
   const uniqueDates = useMemo(() => {

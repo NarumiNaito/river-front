@@ -5,6 +5,7 @@ import Footer from '@/components/Footer'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import theme from '@/assets/styles/thema'
+import Loader from '@/components/Loader'
 
 export const metadata: Metadata = {
   title: 'River Info',
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Header />
+            <Loader />
             {children}
             <Footer />
           </ThemeProvider>
