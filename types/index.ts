@@ -17,3 +17,10 @@ export interface WaterChartData {
   value: number
   [key: string]: unknown
 }
+
+export type NavItem = {
+  title: string
+  href: string
+}
+
+export type ContentConfig = NavItem[]
