@@ -7,6 +7,7 @@ import { TextField, Button, Paper, Typography, Box } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { axios } from '@/lib/api/Axios'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { useToaster } from '@/hooks/useToaster'
 
 const schema = z.object({
   email: z.string().email({ message: '正しいメールアドレスを入力してください' }),
@@ -36,17 +37,16 @@ export default function LoginPage() {
 
   const router = useRouter()
   const setUser = useAuthStore((state) => state.setUser)
-
+  const { toast } = useToaster()
   const onSubmit = async (data: FormData) => {
     try {
       await axios.get('sanctum/csrf-cookie')
       const response = await axios.post<LoginResponse>('/api/login', data)
       const user = response.data.user
-      console.log('ログインユーザー:', user)
       setUser(user)
       router.push('/dashboard')
     } catch (error) {
-      console.error('ログイン失敗:', error)
+      throw error
     } finally {
     }
   }
@@ -61,6 +61,18 @@ export default function LoginPage() {
         p: 2,
       }}
     >
+      {' '}
+      <button
+        onClick={() =>
+          toast({
+            title: 'テスト',
+            description: 'トースト表示テストです',
+            variant: 'success',
+          })
+        }
+      >
+        トーストを表示
+      </button>
       <Paper elevation={6} sx={{ p: 4, width: '100%', maxWidth: 400 }}>
         <Typography variant='h4' align='center' gutterBottom fontWeight='bold'>
           ログイン
