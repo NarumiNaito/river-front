@@ -42,6 +42,7 @@ export default function LoginPage() {
       await axios.get('sanctum/csrf-cookie')
       const response = await axios.post<LoginResponse>('/api/login', data)
       const user = response.data.user
+      console.log('ログインユーザー:', user)
       setUser(user)
       router.push('/dashboard')
     } catch (error) {
