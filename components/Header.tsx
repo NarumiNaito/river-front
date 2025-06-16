@@ -1,16 +1,29 @@
 'use client'
-import { AppBar, Box, Toolbar, Button, Skeleton } from '@mui/material'
+import { AppBar, Box, Toolbar, Button, Skeleton, Menu, MenuItem } from '@mui/material'
+import AccountCircle from '@mui/icons-material/AccountCircle'
 import Link from 'next/link'
 import { authContent } from '@/const/headerContent'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { axios } from '@/lib/api/Axios'
+import { useState } from 'react'
 
 export default function Header() {
   const { isLoggedIn, logout, user, isAuthChecked } = useAuthStore()
   const router = useRouter()
 
+  const [open, setOpen] = useState<null | HTMLElement>(null)
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setOpen(event.currentTarget)
+  }
+
+  const handleMenuClose = () => {
+    setOpen(null)
+  }
+
   const handleLogout = async () => {
+    handleMenuClose()
     try {
       await axios.get('sanctum/csrf-cookie')
       await axios.post('api/user/logout')
@@ -37,17 +50,19 @@ export default function Header() {
           大河津水位モニタリング
         </Link>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          {!isAuthChecked ? (
+          {isAuthChecked && isLoggedIn ? (
             <>
-              <Skeleton variant='rectangular' width={100} height={36} />
+              <Box>
+                <Button color='inherit' onClick={handleMenuOpen} startIcon={<AccountCircle />}>
+                  {user?.name}
+                </Button>
+                <Menu anchorEl={open} open={Boolean(open)} onClose={handleMenuClose}>
+                  <MenuItem onClick={handleLogout}>ログアウト</MenuItem>
+                </Menu>
+              </Box>
             </>
-          ) : isLoggedIn ? (
-            <>
-              <Box sx={{ display: 'flex', alignItems: 'center', color: 'white' }}>{user?.name}</Box>
-              <Button color='inherit' onClick={handleLogout}>
-                ログアウト
-              </Button>
-            </>
+          ) : !isAuthChecked ? (
+            <Skeleton variant='rectangular' width={100} height={36} />
           ) : (
             authContent.map((item, index) => (
               <Link

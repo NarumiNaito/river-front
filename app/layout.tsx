@@ -5,7 +5,10 @@ import Footer from '@/components/Footer'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import theme from '@/assets/styles/thema'
-import ClientAuthProvider from '@/Providers/ ClientAuthProvider'
+import ClientAuthProvider from '@/Providers/ClientAuthProvider'
+import { Toast } from '@/components/ui/Toast'
+import { AxiosClientProvider } from '@/Providers/AxiosClientProvider'
+// import { ToastProvider } from '@/Providers/ToastProvider'
 
 export const metadata: Metadata = {
   title: 'River Info',
@@ -19,11 +22,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AppRouterCacheProvider options={{ key: 'css', enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <ClientAuthProvider>
-              <Header />
-              {children}
-              <Footer />
-            </ClientAuthProvider>
+            {/* <ToastProvider> */}
+            <AxiosClientProvider>
+              <ClientAuthProvider>
+                <Header />
+                <Toast />
+                {children}
+                <Footer />
+              </ClientAuthProvider>
+            </AxiosClientProvider>
+            {/* </ToastProvider> */}
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
