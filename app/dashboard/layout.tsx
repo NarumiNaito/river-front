@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import ClientAuthProvider from '@/Providers/ ClientAuthProvider'
 
 export const metadata: Metadata = {
   title: 'River Info',
@@ -7,9 +6,5 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <main>
-      <ClientAuthProvider>{children}</ClientAuthProvider>
-    </main>
-  )
+  return <main>{children}</main>
 }
