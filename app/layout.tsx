@@ -8,7 +8,6 @@ import theme from '@/assets/styles/thema'
 import ClientAuthProvider from '@/Providers/ClientAuthProvider'
 import { Toast } from '@/components/ui/Toast'
 import { AxiosClientProvider } from '@/Providers/AxiosClientProvider'
-// import { ToastProvider } from '@/Providers/ToastProvider'
 
 export const metadata: Metadata = {
   title: 'River Info',
@@ -22,7 +21,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AppRouterCacheProvider options={{ key: 'css', enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            {/* <ToastProvider> */}
             <AxiosClientProvider>
               <ClientAuthProvider>
                 <Header />
@@ -31,7 +29,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Footer />
               </ClientAuthProvider>
             </AxiosClientProvider>
-            {/* </ToastProvider> */}
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
