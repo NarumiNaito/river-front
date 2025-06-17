@@ -1,10 +1,9 @@
-import { Container } from '@mui/material'
-import WaterLevelContent from '@/features/waterLevel/WaterLevelContent'
+import WaterLevelContent from '@/features/waterLevel/templates/WaterLevelContent'
 
 export default function Home() {
   return (
-    <Container maxWidth='lg' sx={{ py: 4 }}>
+    <main>
       <WaterLevelContent />
-    </Container>
+    </main>
   )
 }

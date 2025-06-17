@@ -5,7 +5,7 @@ import { axios } from '@/lib/api/Axios'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useRouter, usePathname } from 'next/navigation'
 import { useLoadingStore } from '@/stores/useLoadingStore'
-import Loader from '@/components/Loader'
+import Loading from '@/components/ui/Loading'
 
 type UserResponse = {
   user: {
@@ -54,7 +54,7 @@ export default function ClientAuthProvider({ children }: { children: ReactNode }
   if (isLoading) {
     return (
       <div>
-        <Loader />
+        <Loading />
       </div>
     )
   }

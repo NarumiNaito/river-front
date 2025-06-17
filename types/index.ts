@@ -24,3 +24,14 @@ export type NavItem = {
 }
 
 export type ContentConfig = NavItem[]
+
+export type User = {
+  id: number
+  name: string
+  email: string
+}
+
+export type UserResponse = {
+  message: string
+  user: User
+}
