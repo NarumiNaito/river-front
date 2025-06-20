@@ -10,7 +10,7 @@ import { Toast } from '@/components/ui/Toast'
 import { AxiosClientProvider } from '@/Providers/AxiosClientProvider'
 
 export const metadata: Metadata = {
-  title: 'River Info',
+  title: '大河津水位',
   description: 'リアルタイム水位情報表示アプリ',
 }
 

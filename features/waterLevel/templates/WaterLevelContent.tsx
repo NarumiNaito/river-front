@@ -7,13 +7,17 @@ import WaterLevelTable from '../components/WaterLevelTable'
 import LatestWaterLevelBox from '../components/LatestWaterLevelBox'
 import DateSelector from '../components/DateSelector'
 import WaterMetadata from '../components/WaterMetaData'
-import { useWaterLevelApi } from '../api/waterLevelApi'
+import { useWaterLevelSettingDataApi, useWaterLevelApi } from '../api/waterLevelApi'
 import { useWaterLevelLogic } from '../hooks/useWaterLevelLogic.ts'
 import Loading from '@/components/ui/Loading'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function WaterLevelContent() {
   const [selectedDate, setSelectedDate] = useState<string>('')
   const { data, isLoading } = useWaterLevelApi()
+  const { settingData } = useWaterLevelSettingDataApi()
+  const { isLoggedIn } = useAuthStore()
+
   const { uniqueDates, filteredData, latestDifference } = useWaterLevelLogic(
     data ?? undefined,
     selectedDate
@@ -36,6 +40,12 @@ export default function WaterLevelContent() {
       </main>
     )
 
+  const canCatchFishNow =
+    settingData &&
+    latestDifference &&
+    latestDifference.latestValue >= settingData.min &&
+    latestDifference.latestValue <= settingData.max
+
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
       <div className='p-4 space-y-6'>
@@ -44,6 +54,22 @@ export default function WaterLevelContent() {
             latestValue={latestDifference.latestValue}
             diff={latestDifference.diff}
           />
+        )}
+
+        {canCatchFishNow && isLoggedIn && (
+          <Box
+            sx={{
+              backgroundColor: '#d0f0c0',
+              color: '#2e7d32',
+              p: 2,
+              borderRadius: 1,
+              textAlign: 'center',
+              fontWeight: 'bold',
+              fontSize: '1.2rem',
+            }}
+          >
+            今釣れます！
+          </Box>
         )}
 
         <WaterMetadata metadata={filteredData.metadata} />
