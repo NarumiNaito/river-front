@@ -35,3 +35,8 @@ export type UserResponse = {
   message: string
   user: User
 }
+
+export type WaterLevelSetting = {
+  min: number
+  max: number
+}
