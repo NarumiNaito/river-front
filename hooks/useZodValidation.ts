@@ -31,7 +31,14 @@ const newPassword = () =>
     .optional()
     .nullable()
 
+const waterLevelSetting = () =>
+  z
+    .number({ invalid_type_error: '数値を入力してください' })
+    .min(5, '5.00以上を入力してください')
+    .max(7, '7.00以下を入力してください')
+
 export const useZodValidation = {
+  waterLevelSetting,
   optionalString,
   requiredString,
   optionalNumber,

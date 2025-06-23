@@ -30,3 +30,8 @@ export async function registerUser(data: RegisterFormData) {
   const response = await axios.post<UserResponse>('/api/register', data)
   return response.data.user
 }
+
+export async function logoutUser() {
+  await axios.get('sanctum/csrf-cookie')
+  await axios.post('api/user/logout')
+}

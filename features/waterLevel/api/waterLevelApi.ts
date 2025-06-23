@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { WaterResponse, WaterLevelSetting } from '@/types'
 import { axios, axiosScraping } from '@/lib/api/Axios'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { useZodValidation } from '@/hooks/useZodValidation'
+import { z } from 'zod'
 
 export function useWaterLevelApi() {
   const [data, setData] = useState<WaterResponse | null>(null)
@@ -63,7 +65,31 @@ export function useWaterLevelSettingDataApi() {
       }
     }
     fetch()
-  }, [])
+  }, [isLoggedIn])
 
   return { settingData }
+}
+
+const { waterLevelSetting } = useZodValidation
+
+export const waterLevelSchema = z
+  .object({
+    min: waterLevelSetting(),
+    max: waterLevelSetting(),
+  })
+  .refine((data) => data.min < data.max, {
+    message: '下限値は上限値より小さくしてください',
+    path: ['min'],
+  })
+
+export type WaterLevelFormData = z.infer<typeof waterLevelSchema>
+
+type Params = {
+  min: number
+  max: number
+}
+
+export const waterLevelEdit = async ({ min, max }: Params) => {
+  await axios.get('sanctum/csrf-cookie')
+  return axios.post('/api/user-water-level/setting', { min, max })
 }

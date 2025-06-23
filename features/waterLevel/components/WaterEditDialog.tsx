@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Dialog,
   DialogTitle,
@@ -8,31 +10,14 @@ import {
   Box,
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-
-const schema = z
-  .object({
-    min: z
-      .number({ invalid_type_error: '数値を入力してください' })
-      .min(5, '5.00以上を入力してください')
-      .max(7, '7.00以下を入力してください'),
-    max: z
-      .number({ invalid_type_error: '数値を入力してください' })
-      .min(5, '5.00以上を入力してください')
-      .max(7, '7.00以下を入力してください'),
-  })
-  .refine((data) => data.min < data.max, {
-    message: '下限値は上限値より小さくしてください',
-    path: ['min'],
-  })
-
-type FormData = z.infer<typeof schema>
+import { waterLevelSchema, WaterLevelFormData } from '../api/waterLevelApi'
+import { useEffect } from 'react'
 
 type Props = {
   open: boolean
   onClose: () => void
-  onSave: (values: FormData) => void
+  onSave: (values: WaterLevelFormData) => Promise<void>
   initialMin?: number
   initialMax?: number
 }
@@ -41,34 +26,42 @@ export default function WaterLevelEditDialog({
   open,
   onClose,
   onSave,
-  initialMin = 5.5,
-  initialMax = 6.5,
+  initialMin,
+  initialMax,
 }: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
+  } = useForm<WaterLevelFormData>({
+    resolver: zodResolver(waterLevelSchema),
     defaultValues: {
       min: initialMin,
       max: initialMax,
     },
   })
 
-  const handleClose = () => {
-    reset()
+  useEffect(() => {
+    if (open && initialMin !== undefined && initialMax !== undefined) {
+      reset({
+        min: initialMin,
+        max: initialMax,
+      })
+    }
+  }, [open, initialMin, initialMax, reset])
+
+  const onSubmit = (data: WaterLevelFormData) => {
+    onSave(data)
     onClose()
   }
 
-  const onSubmit = (data: FormData) => {
-    onSave(data)
-    handleClose()
+  const handleExited = () => {
+    reset()
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth='sm' fullWidth>
+    <Dialog open={open} onClose={handleExited} maxWidth='sm' fullWidth>
       <DialogTitle>水位の下限・上限を編集</DialogTitle>
       <DialogContent dividers>
         <Box
@@ -83,10 +76,14 @@ export default function WaterLevelEditDialog({
             label='下限 (min)'
             type='number'
             fullWidth
-            inputProps={{
-              step: 0.01,
-              min: 5,
-              max: 7,
+            slotProps={{
+              input: {
+                inputProps: {
+                  step: 0.01,
+                  min: 5,
+                  max: 7,
+                },
+              },
             }}
             {...register('min', { valueAsNumber: true })}
             error={!!errors.min}
@@ -96,17 +93,21 @@ export default function WaterLevelEditDialog({
             label='上限 (max)'
             type='number'
             fullWidth
-            inputProps={{
-              step: 0.01,
-              min: 5,
-              max: 7,
+            slotProps={{
+              input: {
+                inputProps: {
+                  step: 0.01,
+                  min: 5,
+                  max: 7,
+                },
+              },
             }}
             {...register('max', { valueAsNumber: true })}
             error={!!errors.max}
             helperText={errors.max?.message}
           />
           <DialogActions>
-            <Button onClick={handleClose}>キャンセル</Button>
+            <Button onClick={onClose}>キャンセル</Button>
             <Button type='submit' variant='contained'>
               保存
             </Button>
