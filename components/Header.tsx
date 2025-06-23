@@ -5,19 +5,23 @@ import Link from 'next/link'
 import { authContent } from '@/const/headerContent'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useRouter } from 'next/navigation'
-import { axios } from '@/lib/api/Axios'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import WaterLevelEditDialog from '@/features/waterLevel/components/WaterEditDialog'
+import {
+  useWaterLevelSettingDataApi,
+  waterLevelEdit,
+} from '@/features/waterLevel/api/waterLevelApi'
+import { logoutUser } from '@/features/auth/api/userApi'
 
 export default function Header() {
   const { isLoggedIn, logout, user, isAuthChecked } = useAuthStore()
+  const { settingData } = useWaterLevelSettingDataApi()
   const router = useRouter()
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
-
-  const [minWaterLevel, setMinWaterLevel] = useState(5.5)
-  const [maxWaterLevel, setMaxWaterLevel] = useState(6.5)
+  const [minWaterLevel, setMinWaterLevel] = useState<number | undefined>(undefined)
+  const [maxWaterLevel, setMaxWaterLevel] = useState<number | undefined>(undefined)
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -30,8 +34,7 @@ export default function Header() {
   const handleLogout = async () => {
     handleMenuClose()
     try {
-      await axios.get('sanctum/csrf-cookie')
-      await axios.post('api/user/logout')
+      logoutUser()
       logout()
       router.push('/login')
     } catch (error) {
@@ -50,12 +53,18 @@ export default function Header() {
     setMaxWaterLevel(max)
 
     try {
-      await axios.get('sanctum/csrf-cookie')
-      await axios.post('/api/user-water-level/setting', { min, max })
+      await waterLevelEdit({ min, max })
     } catch (error) {
       throw error
     }
   }
+
+  useEffect(() => {
+    if (settingData) {
+      setMinWaterLevel(settingData.min)
+      setMaxWaterLevel(settingData.max)
+    }
+  }, [settingData])
 
   return (
     <>
@@ -109,8 +118,8 @@ export default function Header() {
         open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}
         onSave={handleSaveWaterLevel}
-        initialMin={minWaterLevel}
-        initialMax={maxWaterLevel}
+        initialMin={minWaterLevel ?? 5.5}
+        initialMax={maxWaterLevel ?? 6.5}
       />
     </>
   )
