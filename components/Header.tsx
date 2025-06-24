@@ -12,9 +12,11 @@ import {
   waterLevelEdit,
 } from '@/features/waterLevel/api/waterLevelApi'
 import { logoutUser } from '@/features/auth/api/userApi'
+import { useWaterLevelSettingStore } from '@/stores/useWaterLevelSettingStore'
 
 export default function Header() {
   const { isLoggedIn, logout, user, isAuthChecked } = useAuthStore()
+  const { setSettingData } = useWaterLevelSettingStore()
   const { settingData } = useWaterLevelSettingDataApi()
   const router = useRouter()
 
@@ -54,6 +56,7 @@ export default function Header() {
 
     try {
       await waterLevelEdit({ min, max })
+      setSettingData({ min, max })
     } catch (error) {
       throw error
     }
