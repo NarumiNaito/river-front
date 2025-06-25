@@ -2,26 +2,26 @@ import { create } from 'zustand'
 import { WaterLevelSetting } from '@/types'
 
 type WaterLevelStore = {
-  settingData: WaterLevelSetting | null
+  settingsData: WaterLevelSetting | null
   latestValue: number | null
   setSettingData: (data: WaterLevelSetting | null) => void
   setLatestValue: (value: number | null) => void
 }
 
 export const useWaterLevelSettingStore = create<WaterLevelStore>((set) => ({
-  settingData: null,
+  settingsData: null,
   latestValue: null,
-  setSettingData: (data) => set({ settingData: data }),
+  setSettingData: (data) => set({ settingsData: data }),
   setLatestValue: (value) => set({ latestValue: value }),
 }))
 
 export const useCanCatchFishNow = () =>
   useWaterLevelSettingStore((state) => {
-    const { settingData, latestValue } = state
+    const { settingsData, latestValue } = state
     return (
-      settingData !== null &&
+      settingsData !== null &&
       latestValue !== null &&
-      latestValue >= settingData.min &&
-      latestValue <= settingData.max
+      latestValue >= settingsData.min &&
+      latestValue <= settingsData.max
     )
   })

@@ -18,7 +18,7 @@ export default function WaterLevelContent() {
   const { data, isLoading } = useWaterLevelApi()
   const { settingData } = useWaterLevelSettingDataApi()
   const { isLoggedIn } = useAuthStore()
-  const { setSettingData, setLatestValue } = useWaterLevelSettingStore()
+  const { settingsData, setSettingData, setLatestValue } = useWaterLevelSettingStore()
   const canCatchFishNow = useCanCatchFishNow()
 
   const { uniqueDates, filteredData, latestDifference } = useWaterLevelLogic(
@@ -65,6 +65,20 @@ export default function WaterLevelContent() {
             diff={latestDifference.diff}
           />
         )}
+
+        <Box
+          sx={{
+            backgroundColor: '#d0f0c0',
+            color: '#2e7d32',
+            p: 2,
+            borderRadius: 1,
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: '1.2rem',
+          }}
+        >
+          釣れる水位：{settingsData?.min} 〜 {settingsData?.max} m
+        </Box>
 
         {canCatchFishNow && isLoggedIn && (
           <Box
